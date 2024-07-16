@@ -19,14 +19,14 @@ dvorak_chars = ['\'', ',', '.', 'p', 'y', 'f', 'g', 'c', 'r', 'l',
 # Variables configuración:
 distro_inicial = dvorak_chars
 orden = [17,15,13,11,19,20,12,14,16,18,7,5,3,1,9,10,2,4,6,8,27,25,23,21,29,30,22,24,26,28]
-pdf_path = "./libros/go.pdf"
+pdf_path = "./libros/java.pdf"
 
 # Variable configuración AG:
 pobInicial = 10
 pobMaxima = 30
 generaciones = 1
-probReproduccion = 0.8
-probMutacion = 0.5
+probReproduccion = 0.5
+probMutacion = 0.8
 probMutacionGen = 0.5
 
 def leerLibro():
@@ -72,10 +72,11 @@ media = []
 peores = []
 
 def main():
-    # deseadoLibro = leerLibro()
-    layout = configurar_distro()
+    global layoutOrigen, layoutDeseadoLibro
+    layoutDeseadoLibro = leerLibro()
+    layoutOrigen = configurar_distro()
 
-    poblacion = generarPoblacion(layout)
+    poblacion = generarPoblacion(layoutOrigen)
 
     for i in range(generaciones):
         print(f'Generacion {i}')
@@ -84,10 +85,9 @@ def main():
 
         poblacion = poblacion + hijosMutados
 
-        print(poblacion)
-        # evolucionAptitud(poblacion);
+        evolucionAptitud(poblacion)
 
-        # poblacion = podar(poblacion)
+        poblacion = podar(poblacion)
 
 def generarPoblacion(layout): 
     return [random.sample(layout, 30) for _ in range(pobInicial)]
@@ -146,12 +146,26 @@ def mutar(hijos):
     return hijos
 
 def obtenerAptitud(poblacion):
+    '''
+        Aqui es donde esta la magia, voy a ponerle puntos a cada individuo, voy a buscar maximizar.
+        Un individuo se va a ganar un punto si su letra en su posicion i es igual a la posicion i del layoutOrigen
+        ganara otro punto, si su letra tambien es igual a la i del layoutDeseadoLibro
+    '''
     aptitudes = []
+    for individuo in poblacion:
+        fitness = 0
+        for i in range(len(individuo)):
+            if individuo[i] == layoutOrigen[i]:
+                fitness += 1
+            if individuo[i] == layoutDeseadoLibro[i]:
+                fitness += 1
+        aptitudes.append(fitness)
     return aptitudes
 
 def evolucionAptitud(poblacion):
     aptitudes = obtenerAptitud(poblacion)
     _, aptitudes_ordenada = zip(*sorted(zip(poblacion, aptitudes), key=lambda x: x[1]))
+
     mejores.append(aptitudes_ordenada[0])
     peores.append(aptitudes_ordenada[-1])
     media.append(sum(aptitudes_ordenada) / len(aptitudes_ordenada))
