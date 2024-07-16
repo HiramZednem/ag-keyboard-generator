@@ -211,6 +211,24 @@ def graficar(poblacion):
     table.set_fontsize(12)
     table.scale(1.2, 1.2)
     ax.set_title('Detalles de configuración') 
+
+    fig, ax2 = plt.subplots(3, 10, figsize=(12, 6))
+    chars_ordenados = [char for _, char in sorted(zip(orden, poblacion[-1]))]
+    # Iterar sobre los caracteres y asignarlos a los subplots
+    for i, char in enumerate(chars_ordenados):
+        row = i // 10
+        col = i % 10
+        ax2[row, col].text(0.5, 0.5, char, fontsize=14, ha='center')
+
+    # Eliminar los ejes para que parezca un teclado
+    for ax_row in ax2:
+        for ax_cell in ax_row:
+            ax_cell.axis('off')
+
+    # Ajustar el espacio entre subplots
+    plt.subplots_adjust(wspace=0.1, hspace=0.1)
+
+
     plt.show()    
 
 main()

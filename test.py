@@ -1,36 +1,26 @@
-import PyPDF2
-from collections import Counter
+import matplotlib.pyplot as plt
 
-def extract_text_from_pdf(pdf_path):
-    text = ""
-    with open(pdf_path, "rb") as file:
-        reader = PyPDF2.PdfReader(file)
-        for page in range(len(reader.pages)):
-            text += reader.pages[page].extract_text()
-    return text
+# Caracteres qwerty en un arreglo 3x10
+qwerty_chars = ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p',
+                'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'ñ',
+                'z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', '-']
 
-def count_characters(text):
-    return Counter(text)
+# Crear la figura y los subplots
+fig, ax = plt.subplots(3, 10, figsize=(12, 6))
 
-def sort_characters_by_frequency(counter):
-    sorted_characters = sorted(counter.items(), key=lambda item: item[1], reverse=True)
-    return [{"char": char, "quantity": quantity} for char, quantity in sorted_characters]
+# Iterar sobre los caracteres y asignarlos a los subplots
+for i, char in enumerate(qwerty_chars):
+    row = i // 10
+    col = i % 10
+    ax[row, col].text(0.5, 0.5, char, fontsize=14, ha='center')
 
-# Ruta del archivo PDF
-pdf_path = "./libros/go.pdf"
+# Eliminar los ejes para que parezca un teclado
+for ax_row in ax:
+    for ax_cell in ax_row:
+        ax_cell.axis('off')
 
-# Extraer texto del PDF
-text = extract_text_from_pdf(pdf_path)
+# Ajustar el espacio entre subplots
+plt.subplots_adjust(wspace=0.1, hspace=0.1)
 
-# Contar caracteres
-character_count = count_characters(text)
-
-# Ordenar caracteres por frecuencia
-sorted_characters = sort_characters_by_frequency(character_count)
-
-# Guardar los caracteres en un arreglo en el orden que vienen
-characters = [item['char'] for item in sorted_characters]
-
-# Imprimir el resultado
-for item in sorted_characters:
-    print(item)
+# Mostrar el gráfico
+plt.show()
