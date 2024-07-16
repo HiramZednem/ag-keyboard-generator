@@ -31,6 +31,8 @@ sorted_characters = sort_characters_by_frequency(character_count)
 # Guardar los caracteres en un arreglo en el orden que vienen
 characters = [item['char'] for item in sorted_characters]
 
-# Imprimir el resultado
-for item in sorted_characters:
-    print(item)
+print("Characters: ", characters)
+
+# # Imprimir el resultado
+# for item in sorted_characters:
+#     print(item)

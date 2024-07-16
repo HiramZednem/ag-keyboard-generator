@@ -1,4 +1,6 @@
 import random
+import PyPDF2
+from collections import Counter
 
 # Keyboards layout:
 qwerty_chars = [ 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p',
@@ -17,12 +19,15 @@ dvorak_chars = ['\'', ',', '.', 'p', 'y', 'f', 'g', 'c', 'r', 'l',
 distro_inicial = dvorak_chars
 orden = [17,15,13,11,19,20,12,14,16,18,7,5,3,1,9,10,2,4,6,8,27,25,23,21,29,30,22,24,26,28]
 
-
+leerLibro()
 
 
 # random_chars = random.sample(qwerty_chars, 30) 
 # print("random_chars: ", len(random_chars)) 
 # print(random_chars)
+
+def leerLibro():
+    
 
 def configurar_distro():
 
