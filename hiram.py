@@ -25,7 +25,7 @@ pdf_path = "./libros/java.pdf"
 # Variable configuración AG:
 pobInicial = 10
 pobMaxima = 30
-generaciones = 1
+generaciones = 10
 probReproduccion = 0.5
 probMutacion = 0.8
 probMutacionGen = 0.5
