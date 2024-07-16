@@ -203,7 +203,7 @@ def graficar(poblacion):
     }
     cellText = [list(data.values())]
     colLabels = list(data.keys())
-    fig, ax = plt.subplots(figsize=(8, 4))  # Increase the figure size
+    fig, ax = plt.subplots(figsize=(7, 2))  # Increase the figure size
     ax.axis('off')
     table = ax.table(cellText=cellText, colLabels=colLabels, loc='center')
     table.auto_set_font_size(False)
@@ -211,25 +211,42 @@ def graficar(poblacion):
     table.scale(1.2, 1.2)
     ax.set_title('Detalles de configuración') 
 
-    fig, ax2 = plt.subplots(3, 10, figsize=(12, 6))
-    # chars_ordenados = [char for _, char in sorted(zip(orden, poblacion[0]))]
-    # Iterar sobre los caracteres y asignarlos a los subplots
+
+    # MEJOR CONFIGURACION
+    fig, ax2 = plt.subplots(3, 10, figsize=(6, 4))
     for i, char in enumerate(poblacion[0]):
         row = i // 10
         col = i % 10
         ax2[row, col].text(0.5, 0.5, char, fontsize=14, ha='center')
-
-    # Eliminar los ejes para que parezca un teclado
     for ax_row in ax2:
         for ax_cell in ax_row:
             ax_cell.axis('off')
-
     fig.suptitle("Mejor configuración")
 
-    # Ajustar el espacio entre subplots
+    # DISTRO ORIGEN
+    fig2, ax3 = plt.subplots(3, 10, figsize=(6, 4))
+    for i, char in enumerate(distro_inicial):
+        row = i // 10
+        col = i % 10
+        ax3[row, col].text(0.5, 0.5, char, fontsize=14, ha='center')
+    for ax_row in ax3:
+        for ax_cell in ax_row:
+            ax_cell.axis('off')
+    fig2.suptitle("Distro origen")
+
+    # DISTRO ORIGEN
+    fig3, ax4 = plt.subplots(3, 10, figsize=(6, 4))
+    for i, char in enumerate(layoutDeseadoLibro):
+        row = i // 10
+        col = i % 10
+        ax4[row, col].text(0.5, 0.5, char, fontsize=14, ha='center')
+    for ax_row in ax4:
+        for ax_cell in ax_row:
+            ax_cell.axis('off')
+    fig3.suptitle("Distro libro")
+
+
     plt.subplots_adjust(wspace=0.1, hspace=0.1)
-
-
     plt.show()    
 
 main()
