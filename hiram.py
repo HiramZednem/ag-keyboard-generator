@@ -25,7 +25,7 @@ pdf_path = "./libros/java.pdf"
 # Variable configuración AG:
 pobInicial = 10
 pobMaxima = 30
-generaciones = 10
+generaciones = 50
 probReproduccion = 0.5
 probMutacion = 0.8
 probMutacionGen = 0.5
@@ -86,7 +86,8 @@ def main():
         evolucionAptitud(poblacion)
 
         poblacion = podar(poblacion)
-
+        
+    print(poblacion)
     graficar(poblacion)
 
 def generarPoblacion(layout): 
