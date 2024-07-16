@@ -188,6 +188,29 @@ def graficar(poblacion):
     plt.xlabel('Generaciones')
     plt.ylabel('Aptitud')
     plt.title('Evaluación de aptitud')
+
+    distroI = ""
+    if layoutOrigen == qwerty_chars:
+        distroI = "Qwerty"
+    elif layoutOrigen == colemak_chars:
+        distroI = "Colemak"
+    elif layoutOrigen == dvorak_chars:
+        distroI = "Dvorak"
+
+    data = {
+        'Distro Inicial': distroI,
+        'Libro': pdf_path,
+        'Letras en misma posicion': mejores[-1],
+    }
+    cellText = [list(data.values())]
+    colLabels = list(data.keys())
+    fig, ax = plt.subplots(figsize=(8, 4))  # Increase the figure size
+    ax.axis('off')
+    table = ax.table(cellText=cellText, colLabels=colLabels, loc='center')
+    table.auto_set_font_size(False)
+    table.set_fontsize(12)
+    table.scale(1.2, 1.2)
+    ax.set_title('Detalles de configuración') 
     plt.show()    
 
 main()
