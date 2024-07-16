@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 
 # Keyboards layout:
 qwerty_chars = [ 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p',
-                 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'ñ',
+                 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', ';',
                  'z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', '-']
 
 colemak_chars = [ 'q', 'w', 'f', 'p', 'g', 'j', 'l', 'u', 'y', ';', 
@@ -18,7 +18,7 @@ dvorak_chars = ['\'', ',', '.', 'p', 'y', 'f', 'g', 'c', 'r', 'l',
                    '-', 'q', 'j', 'k', 'x', 'b', 'm', 'w', 'v', 'z']
 
 # Variables configuración:
-distro_inicial = dvorak_chars
+distro_inicial = qwerty_chars
 orden = [17,15,13,11,19,20,12,14,16,18,7,5,3,1,9,10,2,4,6,8,27,25,23,21,29,30,22,24,26,28]
 pdf_path = "./libros/java.pdf"
 
@@ -159,7 +159,8 @@ def obtenerAptitud(poblacion):
             if individuo[i] == layoutOrigen[i]:
                 fitness += 1
             if individuo[i] == layoutDeseadoLibro[i]:
-                fitness += 1
+                # fitness += 1
+                print()
         aptitudes.append(fitness)
     return aptitudes
 
@@ -213,7 +214,7 @@ def graficar(poblacion):
     ax.set_title('Detalles de configuración') 
 
     fig, ax2 = plt.subplots(3, 10, figsize=(12, 6))
-    chars_ordenados = [char for _, char in sorted(zip(orden, poblacion[-1]))]
+    chars_ordenados = [char for _, char in sorted(zip(orden, poblacion[0]))]
     # Iterar sobre los caracteres y asignarlos a los subplots
     for i, char in enumerate(chars_ordenados):
         row = i // 10
@@ -226,7 +227,7 @@ def graficar(poblacion):
             ax_cell.axis('off')
 
     fig.suptitle("Mejor configuración")
-    
+
     # Ajustar el espacio entre subplots
     plt.subplots_adjust(wspace=0.1, hspace=0.1)
 
