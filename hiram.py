@@ -24,7 +24,7 @@ pdf_path = "./libros/go.pdf"
 # Variable configuración AG:
 pobInicial = 10
 pobMaxima = 30
-generaciones = 10
+generaciones = 1
 probReproduccion = 0.8
 probMutacion = 0.5
 probMutacionGen = 0.5
@@ -80,12 +80,13 @@ def main():
     for i in range(generaciones):
         print(f'Generacion {i}')
         hijos = reproducir(poblacion)
-        hijosMutados = mutar(hijos)
-        poblacion = poblacion.tolist() + hijosMutados
+        # hijosMutados = mutar(hijos)
+        poblacion = poblacion + hijos
 
-        evolucionAptitud(poblacion);
+        print(poblacion)
+        # evolucionAptitud(poblacion);
 
-        poblacion = podar(poblacion)
+        # poblacion = podar(poblacion)
 
 def generarPoblacion(layout): 
     return [random.sample(layout, 30) for _ in range(pobInicial)]
@@ -97,7 +98,6 @@ def reproducir(poblacion):
     # tienen que generar m números aleatorios que harán referencia a los individuos con que se
     # cruzarán. Se puede omitir que sea pareja de sí mismo. n <= Tamaño máximo de la
     # población y es un parámetro.
-    poblacion = poblacion.tolist()
     nuevaPoblacion = []
     for individuo in poblacion:
         m = random.randint(0, min(pobMaxima, len(poblacion)-1))
@@ -114,8 +114,19 @@ def cruza(individuo1, individuo2):
     # posibles puntos de cruza de los individuos se selecciona aleatoriamente la posición.
     puntoCruza = random.randint(0, len(individuo1))
 
-    hijo1 = np.concatenate((individuo1[:puntoCruza], individuo2[puntoCruza:])).astype(int)
-    hijo2 = np.concatenate((individuo2[:puntoCruza], individuo1[puntoCruza:])).astype(int)
+    hijo1 = np.concatenate((individuo1[:puntoCruza], individuo2[puntoCruza:]))
+    hijo2 = np.concatenate((individuo2[:puntoCruza], individuo1[puntoCruza:]))
+
+    ## Verificar que no haya caracteres repetidos y agregar los faltantes
+    hijo1 = list(set(hijo1))
+    hijo2 = list(set(hijo2))
+
+    faltantes_hijo1 = [char for char in individuo2 if char not in hijo1]
+    faltantes_hijo2 = [char for char in individuo1 if char not in hijo2]
+
+    hijo1.extend(faltantes_hijo1)
+    hijo2.extend(faltantes_hijo2)
+
     return hijo1, hijo2
 
 def mutar(hijos):
@@ -131,25 +142,7 @@ def mutar(hijos):
     return hijos
 
 def obtenerAptitud(poblacion):
-    ''' 
-        Aqui es donde esta la magia
-        Necesito calcular el valor de y de mi individuo.
-        Se debe de evaluar el individuo con el dataset de y.
-        Por cada valor de y, apendare a un arreglo de errores el valor de y - y_individuo
-        utilizare np.linalg.norm sobre el arreglo para calcular el fitness
-        busco minimizar y que la longuitud de ese vector sea 0
-        https://www.youtube.com/watch?v=qAXsB3CYdBY 
-    '''
     aptitudes = []
-    for individuo in poblacion:
-        errores = []
-        
-        for i, yd in enumerate(y):
-            xd = x[i]
-            y_individuo = individuo[0] + xd[0]*individuo[1] + xd[1]*individuo[2] + xd[2]*individuo[3] + xd[3]*individuo[4]
-            errores.append(yd - y_individuo)
-        fitness = np.linalg.norm(errores)
-        aptitudes.append(fitness)
     return aptitudes
 
 def evolucionAptitud(poblacion):
