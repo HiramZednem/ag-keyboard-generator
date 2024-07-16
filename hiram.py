@@ -3,8 +3,10 @@ import PyPDF2
 from collections import Counter
 import numpy as np
 import matplotlib.pyplot as plt
+import tkinter as tk
+from tkinter import ttk
 
-# Keyboards layout:
+
 qwerty_chars = [ 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p',
                  'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', ';',
                  'z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', '-']
@@ -17,18 +19,107 @@ dvorak_chars = ['\'', ',', '.', 'p', 'y', 'f', 'g', 'c', 'r', 'l',
                  'a', 'o', 'e', 'u', 'i', 'd', 'h', 't', 'n', 's',
                    '-', 'q', 'j', 'k', 'x', 'b', 'm', 'w', 'v', 'z']
 
+def get_values():
+    global pobInicial, pobMaxima, generaciones, probReproduccion, probMutacion, probMutacionGen, distro_inicial
+    pobInicial = int(pobInicial_entry.get())
+    pobMaxima = int(pobMaxima_entry.get())
+    generaciones = int(generaciones_entry.get())
+    probReproduccion = float(probReproduccion_entry.get())
+    probMutacion = float(probMutacion_entry.get())
+    probMutacionGen = float(probMutacionGen_entry.get())
+    
+    layout = algorithm_combo.get()
+    if layout == "Qwerty":
+        distro_inicial = qwerty_chars
+    elif layout == "Dvorak":
+        distro_inicial = dvorak_chars
+    elif layout == "Colemak":
+        distro_inicial = colemak_chars
+    
+    root.destroy()
+    
+root = tk.Tk()
+root.title("Parameter Values")
+
+# Labels
+pobInicial_label = ttk.Label(root, text="pobInicial:")
+pobMaxima_label = ttk.Label(root, text="pobMaxima:")
+generaciones_label = ttk.Label(root, text="generaciones:")
+probReproduccion_label = ttk.Label(root, text="probReproduccion:")
+probMutacion_label = ttk.Label(root, text="probMutacion:")
+probMutacionGen_label = ttk.Label(root, text="probMutacionGen:")
+
+pobInicial_label.grid(row=0, column=0, padx=5, pady=5, sticky=tk.W)
+pobMaxima_label.grid(row=1, column=0, padx=5, pady=5, sticky=tk.W)
+generaciones_label.grid(row=2, column=0, padx=5, pady=5, sticky=tk.W)
+probReproduccion_label.grid(row=3, column=0, padx=5, pady=5, sticky=tk.W)
+probMutacion_label.grid(row=4, column=0, padx=5, pady=5, sticky=tk.W)
+probMutacionGen_label.grid(row=5, column=0, padx=5, pady=5, sticky=tk.W)
+
+# Entry fields
+pobInicial_entry = ttk.Entry(root)
+pobMaxima_entry = ttk.Entry(root)
+generaciones_entry = ttk.Entry(root)
+probReproduccion_entry = ttk.Entry(root)
+probMutacion_entry = ttk.Entry(root)
+probMutacionGen_entry = ttk.Entry(root)
+
+pobInicial_entry.insert(0, "10")
+pobMaxima_entry.insert(0, "30")
+generaciones_entry.insert(0, "10")
+probReproduccion_entry.insert(0, "0.5")
+probMutacion_entry.insert(0, "0.8")
+probMutacionGen_entry.insert(0, "0.5")
+
+pobInicial_entry.grid(row=0, column=1, padx=5, pady=5)
+pobMaxima_entry.grid(row=1, column=1, padx=5, pady=5)
+generaciones_entry.grid(row=2, column=1, padx=5, pady=5)
+probReproduccion_entry.grid(row=3, column=1, padx=5, pady=5)
+probMutacion_entry.grid(row=4, column=1, padx=5, pady=5)
+probMutacionGen_entry.grid(row=5, column=1, padx=5, pady=5)
+
+
+algorithm_label = ttk.Label(root, text="Layout Origen:")
+algorithm_combo = ttk.Combobox(root, values=["Qwerty", "Dvorak", "Colemak"])
+algorithm_label.grid(row=6, column=0, padx=5, pady=5, sticky=tk.W)
+algorithm_combo.grid(row=6, column=1, padx=5, pady=5)
+algorithm_combo.current(0)
+
+# Button
+submit_button = ttk.Button(root, text="Submit", command=get_values)
+submit_button.grid(row=10, column=0, columnspan=2, padx=5, pady=5)
+
+root.mainloop()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# Keyboards layout:
+
+
 # Variables configuración:
-distro_inicial = qwerty_chars
 orden = [17,15,13,11,19,20,12,14,16,18,7,5,3,1,9,10,2,4,6,8,27,25,23,21,29,30,22,24,26,28]
 pdf_path = "./libros/java.pdf"
-
-# Variable configuración AG:
-pobInicial = 10
-pobMaxima = 30
-generaciones = 100
-probReproduccion = 0.5
-probMutacion = 0.8
-probMutacionGen = 0.5
 
 def leerLibro():
     def extract_text_from_pdf(pdf_path):
