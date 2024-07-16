@@ -2,6 +2,7 @@ import random
 import PyPDF2
 from collections import Counter
 import numpy as np
+import matplotlib.pyplot as plt
 
 # Keyboards layout:
 qwerty_chars = [ 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p',
@@ -24,7 +25,7 @@ pdf_path = "./libros/java.pdf"
 # Variable configuración AG:
 pobInicial = 10
 pobMaxima = 30
-generaciones = 1
+generaciones = 10
 probReproduccion = 0.5
 probMutacion = 0.8
 probMutacionGen = 0.5
@@ -88,6 +89,8 @@ def main():
         evolucionAptitud(poblacion)
 
         poblacion = podar(poblacion)
+
+    graficar(poblacion)
 
 def generarPoblacion(layout): 
     return [random.sample(layout, 30) for _ in range(pobInicial)]
@@ -164,7 +167,7 @@ def obtenerAptitud(poblacion):
 
 def evolucionAptitud(poblacion):
     aptitudes = obtenerAptitud(poblacion)
-    _, aptitudes_ordenada = zip(*sorted(zip(poblacion, aptitudes), key=lambda x: x[1]))
+    _, aptitudes_ordenada = zip(*sorted(zip(poblacion, aptitudes), key=lambda x: x[1], reverse=True))
 
     mejores.append(aptitudes_ordenada[0])
     peores.append(aptitudes_ordenada[-1])
@@ -175,10 +178,18 @@ def podar(poblacion):
     poblacion = list(set(tuple(map(tuple, poblacion)))) # Elimina duplicados
     aptitudes = obtenerAptitud(poblacion)
 
-    poblacion_ordenada, aptitudes_ordenada = zip(*sorted(zip(poblacion, aptitudes), key=lambda x: x[1]))
+    poblacion_ordenada, aptitudes_ordenada = zip(*sorted(zip(poblacion, aptitudes), key=lambda x: x[1], reverse=True))
 
-    return np.array(poblacion_ordenada[:pobMaxima])
+    return list(poblacion_ordenada[:pobMaxima])
     
-    
+def graficar(poblacion):
+    plt.plot(mejores, label='Mejores')
+    plt.plot(peores, label='Peores')
+    plt.plot(media, label='Media')
+    plt.legend(['Mejores', 'Peores', 'Media'])
+    plt.xlabel('Generaciones')
+    plt.ylabel('Aptitud')
+    plt.title('Evaluación de aptitud')
+    plt.show()    
 
 main()
