@@ -181,6 +181,19 @@ def podar(poblacion):
     poblacion_ordenada, aptitudes_ordenada = zip(*sorted(zip(poblacion, aptitudes), key=lambda x: x[1], reverse=True))
 
     return list(poblacion_ordenada[:pobMaxima])
+
+def obtenerPosiciones(individuo):
+    posMejor = []
+    posOrigen = []
+    posLibro = []
+    for i in range(len(individuo)):
+        if individuo[i] == layoutOrigen[i]:
+            posOrigen.append(i)
+            posMejor.append(i)
+        elif individuo[i] == layoutDeseadoLibro[i]:
+            posLibro.append(i)
+            posMejor.append(i)
+    return posMejor, posOrigen, posLibro
     
 def graficar(poblacion):
     plt.plot(mejores, label='Mejores')
@@ -214,7 +227,7 @@ def graficar(poblacion):
     table.scale(1.2, 1.2)
     ax.set_title('Detalles de configuración') 
 
-
+    posMejor, posOrigen, posLibro = obtenerPosiciones(poblacion[0])
     # MEJOR CONFIGURACION
     fig, ax2 = plt.subplots(3, 10, figsize=(6, 4))
     for i, char in enumerate(poblacion[0]):

@@ -12,7 +12,10 @@ fig, ax = plt.subplots(3, 10, figsize=(12, 6))
 for i, char in enumerate(qwerty_chars):
     row = i // 10
     col = i % 10
-    ax[row, col].text(0.5, 0.5, char, fontsize=14, ha='center')
+    if i == 0:  # Verificar si es la posición [0]
+        ax[row, col].text(0.5, 0.5, char, fontsize=14, ha='center', color='red')
+    else:
+        ax[row, col].text(0.5, 0.5, char, fontsize=14, ha='center')
 
 # Eliminar los ejes para que parezca un teclado
 for ax_row in ax:
