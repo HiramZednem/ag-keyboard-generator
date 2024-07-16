@@ -214,9 +214,9 @@ def graficar(poblacion):
     ax.set_title('Detalles de configuración') 
 
     fig, ax2 = plt.subplots(3, 10, figsize=(12, 6))
-    chars_ordenados = [char for _, char in sorted(zip(orden, poblacion[0]))]
+    # chars_ordenados = [char for _, char in sorted(zip(orden, poblacion[0]))]
     # Iterar sobre los caracteres y asignarlos a los subplots
-    for i, char in enumerate(chars_ordenados):
+    for i, char in enumerate(poblacion[0]):
         row = i // 10
         col = i % 10
         ax2[row, col].text(0.5, 0.5, char, fontsize=14, ha='center')
