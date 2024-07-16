@@ -1,6 +1,7 @@
 import random
 import PyPDF2
 from collections import Counter
+import numpy as np
 
 # Keyboards layout:
 qwerty_chars = [ 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p',
@@ -20,10 +21,13 @@ distro_inicial = dvorak_chars
 orden = [17,15,13,11,19,20,12,14,16,18,7,5,3,1,9,10,2,4,6,8,27,25,23,21,29,30,22,24,26,28]
 pdf_path = "./libros/go.pdf"
 
-
-# random_chars = random.sample(qwerty_chars, 30) 
-# print("random_chars: ", len(random_chars)) 
-# print(random_chars)
+# Variable configuración AG:
+pobInicial = 10
+pobMaxima = 30
+generaciones = 10
+probReproduccion = 0.8
+probMutacion = 0.5
+probMutacionGen = 0.5
 
 def leerLibro():
     def extract_text_from_pdf(pdf_path):
@@ -41,6 +45,7 @@ def leerLibro():
         sorted_characters = sorted(counter.items(), key=lambda item: item[1], reverse=True)
         return [{"char": char, "quantity": quantity} for char, quantity in sorted_characters]
     
+    print("Leyendo libro...")
     # Extraer texto del PDF
     text = extract_text_from_pdf(pdf_path)
 
@@ -61,12 +66,107 @@ def leerLibro():
 def configurar_distro():
     return [char for _, char in sorted(zip(orden, distro_inicial))]
 
-
-
+     
+mejores = []
+media = []
+peores = []
 
 def main():
-    deseadoLibro = leerLibro()
+    # deseadoLibro = leerLibro()
     layout = configurar_distro()
+
+    poblacion = generarPoblacion(layout)
+
+    for i in range(generaciones):
+        print(f'Generacion {i}')
+        hijos = reproducir(poblacion)
+        hijosMutados = mutar(hijos)
+        poblacion = poblacion.tolist() + hijosMutados
+
+        evolucionAptitud(poblacion);
+
+        poblacion = podar(poblacion)
+
+def generarPoblacion(layout): 
+    return [random.sample(layout, 30) for _ in range(pobInicial)]
+
+def reproducir(poblacion):
+    # Formacion de parejas
+    # Estrategia A1: (100 %) para cada individuo, generar un número aleatorio m entre [0, n], m
+    # representa la cantidad de individuos que se cruzarán con el individuo en cuestión, luego se
+    # tienen que generar m números aleatorios que harán referencia a los individuos con que se
+    # cruzarán. Se puede omitir que sea pareja de sí mismo. n <= Tamaño máximo de la
+    # población y es un parámetro.
+    poblacion = poblacion.tolist()
+    nuevaPoblacion = []
+    for individuo in poblacion:
+        m = random.randint(0, min(pobMaxima, len(poblacion)-1))
+        parejas = random.sample(range(len(poblacion)), m) # Selecciona el index de m parejas aleatorias, en el rango existente de la poblacion
+        parejas = [p for p in parejas if p != poblacion.index(individuo)] # Elimina la pareja de si mismo
+        for pareja in parejas:
+            hijo1, hijo2 = cruza(individuo, poblacion[pareja]) # itera al individuo con las parejas seleccionadas
+            nuevaPoblacion.append(hijo1)
+            nuevaPoblacion.append(hijo2)
+    return np.array(nuevaPoblacion)
+
+def cruza(individuo1, individuo2):
+   # Estrategia C1: (90 %) Un punto de cruza aleatorio, para cada pareja a cruzar, de los
+    # posibles puntos de cruza de los individuos se selecciona aleatoriamente la posición.
+    puntoCruza = random.randint(0, len(individuo1))
+
+    hijo1 = np.concatenate((individuo1[:puntoCruza], individuo2[puntoCruza:])).astype(int)
+    hijo2 = np.concatenate((individuo2[:puntoCruza], individuo1[puntoCruza:])).astype(int)
+    return hijo1, hijo2
+
+def mutar(hijos):
+    # Estrategia Propia: Por cada individuo, se recorre cada x y se decide si mutar o no,
+    # si se decide mutar, se le suma o resta un valor aleatorio entre -1 y 1
+    hijos = hijos.tolist()
+    for individuo in hijos:
+        if random.random() < probMutacion:
+            # individuo = [1,2,3,4]
+            for i in range(len(individuo)):
+                if random.random() < probMutacionGen:
+                    individuo[i] = individuo[i] + random.choice([-1, 1]) # Para realizar la mutacion le voy a restar uno o sumar uno aleatoriamente
+    return hijos
+
+def obtenerAptitud(poblacion):
+    ''' 
+        Aqui es donde esta la magia
+        Necesito calcular el valor de y de mi individuo.
+        Se debe de evaluar el individuo con el dataset de y.
+        Por cada valor de y, apendare a un arreglo de errores el valor de y - y_individuo
+        utilizare np.linalg.norm sobre el arreglo para calcular el fitness
+        busco minimizar y que la longuitud de ese vector sea 0
+        https://www.youtube.com/watch?v=qAXsB3CYdBY 
+    '''
+    aptitudes = []
+    for individuo in poblacion:
+        errores = []
+        
+        for i, yd in enumerate(y):
+            xd = x[i]
+            y_individuo = individuo[0] + xd[0]*individuo[1] + xd[1]*individuo[2] + xd[2]*individuo[3] + xd[3]*individuo[4]
+            errores.append(yd - y_individuo)
+        fitness = np.linalg.norm(errores)
+        aptitudes.append(fitness)
+    return aptitudes
+
+def evolucionAptitud(poblacion):
+    aptitudes = obtenerAptitud(poblacion)
+    _, aptitudes_ordenada = zip(*sorted(zip(poblacion, aptitudes), key=lambda x: x[1]))
+    mejores.append(aptitudes_ordenada[0])
+    peores.append(aptitudes_ordenada[-1])
+    media.append(sum(aptitudes_ordenada) / len(aptitudes_ordenada))
+
+def podar(poblacion):
+    # Estrategia P1: (80 %) Mantener los mejores.
+    poblacion = list(set(tuple(map(tuple, poblacion)))) # Elimina duplicados
+    aptitudes = obtenerAptitud(poblacion)
+
+    poblacion_ordenada, aptitudes_ordenada = zip(*sorted(zip(poblacion, aptitudes), key=lambda x: x[1]))
+
+    return np.array(poblacion_ordenada[:pobMaxima])
     
     
 
