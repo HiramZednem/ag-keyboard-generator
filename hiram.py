@@ -87,7 +87,6 @@ def main():
 
         poblacion = podar(poblacion)
         
-    print(poblacion)
     graficar(poblacion)
 
 def generarPoblacion(layout): 
@@ -158,7 +157,7 @@ def obtenerAptitud(poblacion):
         for i in range(len(individuo)):
             if individuo[i] == layoutOrigen[i]:
                 fitness += 1
-            if individuo[i] == layoutDeseadoLibro[i]:
+            elif individuo[i] == layoutDeseadoLibro[i]:
                 fitness += 1
         aptitudes.append(fitness)
     return aptitudes
