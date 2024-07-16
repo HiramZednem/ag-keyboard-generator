@@ -71,8 +71,11 @@ peores = []
 def main():
     global layoutOrigen, layoutDeseadoLibro
     layoutOrigen = distro_inicial
-    layoutDeseadoLibro = leerLibro()
-    layoutDeseadoLibro = [char for char in layoutDeseadoLibro if char in layoutOrigen]
+    layoutDeseadoLibro = leerLibro() # regresa mayor a menor
+    layoutDeseadoLibro = [char for char in layoutDeseadoLibro if char in layoutOrigen] # deja los que esten en comun (tema simbolos)
+
+    # esta es la clave del algoritmo, se ordena segun la carga de trabajo balanceada y de una manera separada
+    layoutDeseadoLibro = [char for _, char in sorted(zip(orden, layoutDeseadoLibro))] # mas info en proceso-orden-base
 
     poblacion = generarPoblacion(layoutOrigen)
 
