@@ -61,11 +61,7 @@ def leerLibro():
 
     characters.remove(' ')
     
-    return characters[:30]
-
-
-def configurar_distro():
-    return [char for _, char in sorted(zip(orden, distro_inicial))]
+    return characters
 
      
 mejores = []
@@ -74,8 +70,9 @@ peores = []
 
 def main():
     global layoutOrigen, layoutDeseadoLibro
+    layoutOrigen = distro_inicial
     layoutDeseadoLibro = leerLibro()
-    layoutOrigen = configurar_distro()
+    layoutDeseadoLibro = [char for char in layoutDeseadoLibro if char in layoutOrigen]
 
     poblacion = generarPoblacion(layoutOrigen)
 
