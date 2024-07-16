@@ -225,6 +225,8 @@ def graficar(poblacion):
         for ax_cell in ax_row:
             ax_cell.axis('off')
 
+    fig.suptitle("Mejor configuración")
+    
     # Ajustar el espacio entre subplots
     plt.subplots_adjust(wspace=0.1, hspace=0.1)
 

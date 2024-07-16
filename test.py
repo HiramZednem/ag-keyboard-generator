@@ -22,5 +22,8 @@ for ax_row in ax:
 # Ajustar el espacio entre subplots
 plt.subplots_adjust(wspace=0.1, hspace=0.1)
 
+# Agregar título al gráfico
+plt.title("Teclado QWERTY")
+
 # Mostrar el gráfico
 plt.show()
