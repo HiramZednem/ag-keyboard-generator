@@ -227,13 +227,18 @@ def graficar(poblacion):
     table.scale(1.2, 1.2)
     ax.set_title('Detalles de configuración') 
 
-    posMejor, posOrigen, posLibro = obtenerPosiciones(poblacion[0])
+    _, posOrigen, posLibro = obtenerPosiciones(poblacion[0])
     # MEJOR CONFIGURACION
     fig, ax2 = plt.subplots(3, 10, figsize=(6, 4))
     for i, char in enumerate(poblacion[0]):
         row = i // 10
         col = i % 10
-        ax2[row, col].text(0.5, 0.5, char, fontsize=14, ha='center')
+        if i in posOrigen:
+            ax2[row, col].text(0.5, 0.5, char, fontsize=14, ha='center', color='orange')
+        elif i in posLibro:
+            ax2[row, col].text(0.5, 0.5, char, fontsize=14, ha='center', color='purple')
+        else: 
+            ax2[row, col].text(0.5, 0.5, char, fontsize=14, ha='center')
     for ax_row in ax2:
         for ax_cell in ax_row:
             ax_cell.axis('off')
