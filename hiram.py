@@ -212,14 +212,18 @@ def graficar(poblacion):
     elif layoutOrigen == dvorak_chars:
         distroI = "Dvorak"
 
+    posMejor, posOrigen, posLibro = obtenerPosiciones(poblacion[0])
+
     data = {
         'Distro Inicial': distroI,
         'Libro': pdf_path,
-        'Letras en misma posicion': mejores[-1],
+        'Letras Origen': len(posOrigen),
+        'Letras Libro': len(posLibro), 
+        'Total': len(posMejor)
     }
     cellText = [list(data.values())]
     colLabels = list(data.keys())
-    fig, ax = plt.subplots(figsize=(7, 2))  # Increase the figure size
+    fig, ax = plt.subplots(figsize=(12, 2))  # Increase the figure size
     ax.axis('off')
     table = ax.table(cellText=cellText, colLabels=colLabels, loc='center')
     table.auto_set_font_size(False)
@@ -227,7 +231,7 @@ def graficar(poblacion):
     table.scale(1.2, 1.2)
     ax.set_title('Detalles de configuración') 
 
-    _, posOrigen, posLibro = obtenerPosiciones(poblacion[0])
+    
     # MEJOR CONFIGURACION
     fig, ax2 = plt.subplots(3, 10, figsize=(6, 4))
     for i, char in enumerate(poblacion[0]):
