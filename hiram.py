@@ -236,7 +236,7 @@ def graficar(poblacion):
         if i in posOrigen:
             ax2[row, col].text(0.5, 0.5, char, fontsize=14, ha='center', color='orange')
         elif i in posLibro:
-            ax2[row, col].text(0.5, 0.5, char, fontsize=14, ha='center', color='purple')
+            ax2[row, col].text(0.5, 0.5, char, fontsize=14, ha='center', color='blue')
         else: 
             ax2[row, col].text(0.5, 0.5, char, fontsize=14, ha='center')
     for ax_row in ax2:
@@ -249,7 +249,10 @@ def graficar(poblacion):
     for i, char in enumerate(distro_inicial):
         row = i // 10
         col = i % 10
-        ax3[row, col].text(0.5, 0.5, char, fontsize=14, ha='center')
+        if i in posOrigen:
+            ax3[row, col].text(0.5, 0.5, char, fontsize=14, ha='center', color='orange')
+        else:
+            ax3[row, col].text(0.5, 0.5, char, fontsize=14, ha='center')
     for ax_row in ax3:
         for ax_cell in ax_row:
             ax_cell.axis('off')
@@ -260,7 +263,10 @@ def graficar(poblacion):
     for i, char in enumerate(layoutDeseadoLibro):
         row = i // 10
         col = i % 10
-        ax4[row, col].text(0.5, 0.5, char, fontsize=14, ha='center')
+        if i in posLibro:
+            ax4[row, col].text(0.5, 0.5, char, fontsize=14, ha='center', color='blue')
+        else:
+            ax4[row, col].text(0.5, 0.5, char, fontsize=14, ha='center')
     for ax_row in ax4:
         for ax_cell in ax_row:
             ax_cell.axis('off')
