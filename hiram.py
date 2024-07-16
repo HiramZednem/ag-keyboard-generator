@@ -20,7 +20,7 @@ dvorak_chars = ['\'', ',', '.', 'p', 'y', 'f', 'g', 'c', 'r', 'l',
                    '-', 'q', 'j', 'k', 'x', 'b', 'm', 'w', 'v', 'z']
 
 def get_values():
-    global pobInicial, pobMaxima, generaciones, probReproduccion, probMutacion, probMutacionGen, distro_inicial
+    global pobInicial, pobMaxima, generaciones, probReproduccion, probMutacion, probMutacionGen, distro_inicial, pdf_path
     pobInicial = int(pobInicial_entry.get())
     pobMaxima = int(pobMaxima_entry.get())
     generaciones = int(generaciones_entry.get())
@@ -28,7 +28,7 @@ def get_values():
     probMutacion = float(probMutacion_entry.get())
     probMutacionGen = float(probMutacionGen_entry.get())
     
-    layout = algorithm_combo.get()
+    layout = layout_combo.get()
     if layout == "Qwerty":
         distro_inicial = qwerty_chars
     elif layout == "Dvorak":
@@ -36,6 +36,16 @@ def get_values():
     elif layout == "Colemak":
         distro_inicial = colemak_chars
     
+    libro = libro_combo.get()
+    if libro == "go":
+        pdf_path = "./libros/go.pdf"
+    elif libro == "java":
+        pdf_path = "./libros/java.pdf"
+    elif libro == "js":
+        pdf_path = "./libros/js.pdf"
+    elif libro == "r":
+        pdf_path = "./libros/r.pdf"
+
     root.destroy()
     
 root = tk.Tk()
@@ -79,15 +89,21 @@ probMutacion_entry.grid(row=4, column=1, padx=5, pady=5)
 probMutacionGen_entry.grid(row=5, column=1, padx=5, pady=5)
 
 
-algorithm_label = ttk.Label(root, text="Layout Origen:")
-algorithm_combo = ttk.Combobox(root, values=["Qwerty", "Dvorak", "Colemak"])
-algorithm_label.grid(row=6, column=0, padx=5, pady=5, sticky=tk.W)
-algorithm_combo.grid(row=6, column=1, padx=5, pady=5)
-algorithm_combo.current(0)
+layout_label = ttk.Label(root, text="Layout Origen:")
+layout_combo = ttk.Combobox(root, values=["Qwerty", "Dvorak", "Colemak"])
+layout_label.grid(row=6, column=0, padx=5, pady=5, sticky=tk.W)
+layout_combo.grid(row=6, column=1, padx=5, pady=5)
+layout_combo.current(0)
+
+libro_label = ttk.Label(root, text="Layout Libro:")
+libro_combo = ttk.Combobox(root, values=["go", "java", "js", "r"])
+libro_label.grid(row=7, column=0, padx=5, pady=5, sticky=tk.W)
+libro_combo.grid(row=7, column=1, padx=5, pady=5)
+libro_combo.current(1)
 
 # Button
 submit_button = ttk.Button(root, text="Submit", command=get_values)
-submit_button.grid(row=10, column=0, columnspan=2, padx=5, pady=5)
+submit_button.grid(row=14, column=0, columnspan=2, padx=5, pady=5)
 
 root.mainloop()
 
@@ -119,7 +135,6 @@ root.mainloop()
 
 # Variables configuración:
 orden = [17,15,13,11,19,20,12,14,16,18,7,5,3,1,9,10,2,4,6,8,27,25,23,21,29,30,22,24,26,28]
-pdf_path = "./libros/java.pdf"
 
 def leerLibro():
     def extract_text_from_pdf(pdf_path):
