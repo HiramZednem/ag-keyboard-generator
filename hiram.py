@@ -25,7 +25,7 @@ pdf_path = "./libros/java.pdf"
 # Variable configuración AG:
 pobInicial = 10
 pobMaxima = 30
-generaciones = 50
+generaciones = 1
 probReproduccion = 0.5
 probMutacion = 0.8
 probMutacionGen = 0.5
@@ -159,8 +159,7 @@ def obtenerAptitud(poblacion):
             if individuo[i] == layoutOrigen[i]:
                 fitness += 1
             if individuo[i] == layoutDeseadoLibro[i]:
-                # fitness += 1
-                print()
+                fitness += 1
         aptitudes.append(fitness)
     return aptitudes
 
