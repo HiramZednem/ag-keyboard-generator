@@ -80,8 +80,9 @@ def main():
     for i in range(generaciones):
         print(f'Generacion {i}')
         hijos = reproducir(poblacion)
-        # hijosMutados = mutar(hijos)
-        poblacion = poblacion + hijos
+        hijosMutados = mutar(hijos)
+
+        poblacion = poblacion + hijosMutados
 
         print(poblacion)
         # evolucionAptitud(poblacion);
@@ -130,15 +131,18 @@ def cruza(individuo1, individuo2):
     return hijo1, hijo2
 
 def mutar(hijos):
-    # Estrategia Propia: Por cada individuo, se recorre cada x y se decide si mutar o no,
-    # si se decide mutar, se le suma o resta un valor aleatorio entre -1 y 1
+    # Estrategia Propia: Por cada individuo, se recorre cada letra y se decide si mutar o no,
+    # si se decide mutar, se genera un número aleatorio y se intercambia la letra en la posición
     hijos = hijos.tolist()
     for individuo in hijos:
         if random.random() < probMutacion:
             # individuo = [1,2,3,4]
             for i in range(len(individuo)):
                 if random.random() < probMutacionGen:
-                    individuo[i] = individuo[i] + random.choice([-1, 1]) # Para realizar la mutacion le voy a restar uno o sumar uno aleatoriamente
+                    if random.random() < probMutacionGen:
+                        random_index = random.randint(0, len(individuo)-2)
+                        if random_index != i:
+                            individuo[i], individuo[random_index] = individuo[random_index], individuo[i] # Intercambio de posición entre dos caracteres adyacentes
     return hijos
 
 def obtenerAptitud(poblacion):
